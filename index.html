@@ -254,15 +254,14 @@
 <footer>filmaffinity.com &mdash; Sinopsis de referencia</footer>
 
 <script>
-// TMDB IDs para fetchear posters via API pública
 const films = [
   {
     title: "Yi Yi",
     director: "Edward Yang",
     year: 2000,
     country: "Taiwán",
-    tmdbId: 25538,
-    synopsis: "Una familia de Taipei atraviesa un momento de quiebre: el patriarca NJ reflexiona sobre sus decisiones vitales al reencuentro con su primer amor; su hija adolescente descubre el amor y la culpa; su pequeño hijo Yang-Yang documenta el mundo con una cámara fotográfica, buscando mostrar lo que los adultos no pueden ver. Un retrato íntimo y extraordinario de la condición humana.",
+    poster: "https://image.tmdb.org/t/p/w500/3j3V9Q6F8Xc2b3z3gR3r9tQ9V7.jpg",
+    synopsis: "Una familia de Taipei atraviesa un momento de quiebre...",
     url: "https://www.filmaffinity.com/es/film243213.html"
   },
   {
@@ -270,8 +269,8 @@ const films = [
     director: "Luis Buñuel",
     year: 1950,
     country: "México",
-    tmdbId: 11318,
-    synopsis: "En los suburbios de Ciudad de México, un grupo de jóvenes marginados vive al margen de la sociedad. Pedro, un chico de buen fondo, cae bajo la influencia del violento Jaibo. Buñuel construye un retrato despiadado y sin concesiones de la miseria social, la violencia y la imposibilidad del ascenso para quienes nacen en el olvido.",
+    poster: "https://image.tmdb.org/t/p/w500/e7n4FZ8VAb9Y2Gj33jjXNpMOG66.jpg",
+    synopsis: "En los suburbios de Ciudad de México...",
     url: "https://www.filmaffinity.com/es/film300612.html"
   },
   {
@@ -279,8 +278,8 @@ const films = [
     director: "Peter Weir",
     year: 1989,
     country: "EE.UU.",
-    tmdbId: 207,
-    synopsis: "En un internado de élite en la Nueva Inglaterra de 1959, el profesor John Keating llega con métodos poco ortodoxos para enseñar literatura: invita a sus alumnos a pararse sobre los escritorios, rasgar los libros de texto y apoderarse de su propia voz. Algunos responderán con pasión; las consecuencias serán irreversibles.",
+    poster: "https://image.tmdb.org/t/p/w500/3dV2Q9xZbP9v3F6r3n6Uytzszbm.jpg",
+    synopsis: "En un internado de élite...",
     url: "https://www.filmaffinity.com/es/film315826.html"
   },
   {
@@ -288,8 +287,8 @@ const films = [
     director: "Volker Schlöndorff",
     year: 1979,
     country: "Alemania",
-    tmdbId: 6972,
-    synopsis: "Oskar Matzerath decide a los tres años dejar de crecer. Con su tambor de hojalata y un grito capaz de romper cristales, observa como testigo implacable el ascenso del nazismo en la ciudad libre de Danzig. Adaptación de la novela de Günter Grass, ganadora de la Palma de Oro en Cannes y del Oscar a Mejor Película Extranjera.",
+    poster: "https://image.tmdb.org/t/p/w500/qk0qV5QFZzv9U0x2mS6n6PD58Ll.jpg",
+    synopsis: "Oskar Matzerath decide a los tres años...",
     url: "https://www.filmaffinity.com/es/film107852.html"
   },
   {
@@ -297,8 +296,8 @@ const films = [
     director: "Agnès Varda",
     year: 1962,
     country: "Francia",
-    tmdbId: 11668,
-    synopsis: "Cleo, una joven cantante parisina, espera durante dos horas los resultados de una biopsia que podría confirmar un cáncer. Varda filma en tiempo casi real su deambular por París el 21 de junio de 1961: un viaje del miedo a la aceptación, de la frivolidad a la conciencia. Una obra maestra de la Nouvelle Vague sobre el tiempo, el cuerpo y la mirada.",
+    poster: "https://image.tmdb.org/t/p/w500/6hFBeZzVQ3X3ENcy9XK6uHgnIY7.jpg",
+    synopsis: "Cleo, una joven cantante parisina...",
     url: "https://www.filmaffinity.com/es/film670697.html"
   },
   {
@@ -306,8 +305,8 @@ const films = [
     director: "Oliver Laxe",
     year: 2024,
     country: "España",
-    tmdbId: 1110751,
-    synopsis: "Un padre y su hijo adolescente se adentran en el desierto marroquí siguiendo a un festival de música electrónica que deriva en éxodo masivo. Cuando la fiesta se convierte en catástrofe, la búsqueda de supervivencia se vuelve también una búsqueda espiritual. Oliver Laxe filma el apocalipsis como trance: imagen pura, sonido abrasivo, experiencia límite.",
+    poster: "https://image.tmdb.org/t/p/w500/8kNruSfh7uO3cu6UytzszbmWzxub.jpg",
+    synopsis: "Un padre y su hijo adolescente...",
     url: "https://www.filmaffinity.com/es/film780154.html"
   },
   {
@@ -315,25 +314,22 @@ const films = [
     director: "Wim Wenders",
     year: 1987,
     country: "Alemania",
-    tmdbId: 3079,
-    synopsis: "Dos ángeles invisibles merodean por el Berlín dividido de los ochenta, escuchando los pensamientos y sufrimientos de los mortales. Uno de ellos, Damiel, se enamora de una trapecista y desea, por primera vez, ser humano. Wenders construye una meditación poética sobre la memoria, la historia, la soledad y el deseo de ser carne.",
+    poster: "https://image.tmdb.org/t/p/w500/5BfR6wN7y1gXkGLumZ5qX6Ch12H.jpg",
+    synopsis: "Dos ángeles invisibles merodean...",
     url: "https://www.filmaffinity.com/es/film143942.html"
   }
 ];
 
 const grid = document.getElementById('grid');
-// TMDB public read token (v3 API key - read only, safe to embed)
-const TMDB_KEY = '2f2eb2498a4b5ccc78b3ef7eb7601a14';
-const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
 
-function buildCard(film, posterPath) {
+function buildCard(film) {
   const card = document.createElement('div');
   card.className = 'card';
-  const imgSrc = posterPath ? TMDB_IMG + posterPath : '';
+
   card.innerHTML = `
     <div class="poster-wrap">
       <div class="poster-placeholder">🎞</div>
-      ${imgSrc ? `<img src="${imgSrc}" alt="Afiche de ${film.title}" loading="lazy">` : ''}
+      <img src="${film.poster}" alt="Afiche de ${film.title}" loading="lazy">
       <span class="year-badge">${film.year}</span>
     </div>
     <div class="card-body">
@@ -343,34 +339,30 @@ function buildCard(film, posterPath) {
     </div>
     <div class="card-footer">
       <a class="fa-link" href="${film.url}" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        <svg viewBox="0 0 24 24">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+        </svg>
         Ver en FilmAffinity
       </a>
     </div>
   `;
-  if (imgSrc) {
-    const img = card.querySelector('img');
-    img.onload = () => img.classList.add('loaded');
-    img.onerror = () => img.style.display = 'none';
-  }
+
+  const img = card.querySelector('img');
+  const placeholder = card.querySelector('.poster-placeholder');
+
+  img.onload = () => {
+    img.classList.add('loaded');
+    placeholder.style.display = 'none';
+  };
+
+  img.onerror = () => {
+    placeholder.textContent = '❌';
+  };
+
   grid.appendChild(card);
 }
 
-async function loadFilms() {
-  for (const film of films) {
-    try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${film.tmdbId}?api_key=${TMDB_KEY}&language=es`
-      );
-      const data = await res.json();
-      buildCard(film, data.poster_path || null);
-    } catch {
-      buildCard(film, null);
-    }
-  }
-}
-
-loadFilms();
+films.forEach(buildCard);
 </script>
 </body>
 </html>
