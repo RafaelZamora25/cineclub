@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club de Cine — Selección</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --gold: #c9a84c;
+    --gold-dim: #8a6e2f;
+    --text: #e8e4dc;
+    --muted: #7a7570;
+    --accent: #e63f2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  header {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin: 1.5rem auto 0;
+  }
+
+  .club-label {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  header p {
+    color: var(--muted);
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    gap: 2rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-4px);
+  }
+
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.30s; }
+  .card:nth-child(7) { animation-delay: 0.35s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .poster-wrap {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .poster-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .poster-wrap img.loaded {
+    opacity: 1;
+  }
+
+  .card:hover .poster-wrap img {
+    transform: scale(1.04);
+  }
+
+  .poster-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 2rem;
+  }
+
+  .year-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0,0,0,0.75);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    padding: 0.25rem 0.5rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+  }
+
+  .card-body {
+    padding: 1.4rem 1.4rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-meta {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.8rem;
+  }
+
+  .card-synopsis {
+    font-size: 0.85rem;
+    line-height: 1.75;
+    color: #b0aba3;
+    flex: 1;
+  }
+
+  .card-footer {
+    padding: 1rem 1.4rem 1.4rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+
+  .fa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .fa-link:hover {
+    color: var(--text);
+  }
+
+  .fa-link svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; padding: 1.5rem 1rem; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="club-label">Club de Cine</div>
+  <h1>Selección de la Sesión</h1>
+  <p>Votá tu favorita en el grupo de WhatsApp</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<footer>filmaffinity.com &mdash; Sinopsis de referencia</footer>
+
+<script>
+// TMDB IDs para fetchear posters via API pública
+const films = [
+  {
+    title: "Yi Yi",
+    director: "Edward Yang",
+    year: 2000,
+    country: "Taiwán",
+    tmdbId: 25538,
+    synopsis: "Una familia de Taipei atraviesa un momento de quiebre: el patriarca NJ reflexiona sobre sus decisiones vitales al reencuentro con su primer amor; su hija adolescente descubre el amor y la culpa; su pequeño hijo Yang-Yang documenta el mundo con una cámara fotográfica, buscando mostrar lo que los adultos no pueden ver. Un retrato íntimo y extraordinario de la condición humana.",
+    url: "https://www.filmaffinity.com/es/film243213.html"
+  },
+  {
+    title: "Los olvidados",
+    director: "Luis Buñuel",
+    year: 1950,
+    country: "México",
+    tmdbId: 11318,
+    synopsis: "En los suburbios de Ciudad de México, un grupo de jóvenes marginados vive al margen de la sociedad. Pedro, un chico de buen fondo, cae bajo la influencia del violento Jaibo. Buñuel construye un retrato despiadado y sin concesiones de la miseria social, la violencia y la imposibilidad del ascenso para quienes nacen en el olvido.",
+    url: "https://www.filmaffinity.com/es/film300612.html"
+  },
+  {
+    title: "El club de los poetas muertos",
+    director: "Peter Weir",
+    year: 1989,
+    country: "EE.UU.",
+    tmdbId: 207,
+    synopsis: "En un internado de élite en la Nueva Inglaterra de 1959, el profesor John Keating llega con métodos poco ortodoxos para enseñar literatura: invita a sus alumnos a pararse sobre los escritorios, rasgar los libros de texto y apoderarse de su propia voz. Algunos responderán con pasión; las consecuencias serán irreversibles.",
+    url: "https://www.filmaffinity.com/es/film315826.html"
+  },
+  {
+    title: "El tambor de hojalata",
+    director: "Volker Schlöndorff",
+    year: 1979,
+    country: "Alemania",
+    tmdbId: 6972,
+    synopsis: "Oskar Matzerath decide a los tres años dejar de crecer. Con su tambor de hojalata y un grito capaz de romper cristales, observa como testigo implacable el ascenso del nazismo en la ciudad libre de Danzig. Adaptación de la novela de Günter Grass, ganadora de la Palma de Oro en Cannes y del Oscar a Mejor Película Extranjera.",
+    url: "https://www.filmaffinity.com/es/film107852.html"
+  },
+  {
+    title: "Cleo de 5 a 7",
+    director: "Agnès Varda",
+    year: 1962,
+    country: "Francia",
+    tmdbId: 11668,
+    synopsis: "Cleo, una joven cantante parisina, espera durante dos horas los resultados de una biopsia que podría confirmar un cáncer. Varda filma en tiempo casi real su deambular por París el 21 de junio de 1961: un viaje del miedo a la aceptación, de la frivolidad a la conciencia. Una obra maestra de la Nouvelle Vague sobre el tiempo, el cuerpo y la mirada.",
+    url: "https://www.filmaffinity.com/es/film670697.html"
+  },
+  {
+    title: "Sirat",
+    director: "Oliver Laxe",
+    year: 2024,
+    country: "España",
+    tmdbId: 1110751,
+    synopsis: "Un padre y su hijo adolescente se adentran en el desierto marroquí siguiendo a un festival de música electrónica que deriva en éxodo masivo. Cuando la fiesta se convierte en catástrofe, la búsqueda de supervivencia se vuelve también una búsqueda espiritual. Oliver Laxe filma el apocalipsis como trance: imagen pura, sonido abrasivo, experiencia límite.",
+    url: "https://www.filmaffinity.com/es/film780154.html"
+  },
+  {
+    title: "El cielo sobre Berlín",
+    director: "Wim Wenders",
+    year: 1987,
+    country: "Alemania",
+    tmdbId: 3079,
+    synopsis: "Dos ángeles invisibles merodean por el Berlín dividido de los ochenta, escuchando los pensamientos y sufrimientos de los mortales. Uno de ellos, Damiel, se enamora de una trapecista y desea, por primera vez, ser humano. Wenders construye una meditación poética sobre la memoria, la historia, la soledad y el deseo de ser carne.",
+    url: "https://www.filmaffinity.com/es/film143942.html"
+  }
+];
+
+const grid = document.getElementById('grid');
+// TMDB public read token (v3 API key - read only, safe to embed)
+const TMDB_KEY = '2f2eb2498a4b5ccc78b3ef7eb7601a14';
+const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
+
+function buildCard(film, posterPath) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const imgSrc = posterPath ? TMDB_IMG + posterPath : '';
+  card.innerHTML = `
+    <div class="poster-wrap">
+      <div class="poster-placeholder">🎞</div>
+      ${imgSrc ? `<img src="${imgSrc}" alt="Afiche de ${film.title}" loading="lazy">` : ''}
+      <span class="year-badge">${film.year}</span>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">${film.director} &middot; ${film.country}</div>
+      <h2 class="card-title">${film.title}</h2>
+      <p class="card-synopsis">${film.synopsis}</p>
+    </div>
+    <div class="card-footer">
+      <a class="fa-link" href="${film.url}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Ver en FilmAffinity
+      </a>
+    </div>
+  `;
+  if (imgSrc) {
+    const img = card.querySelector('img');
+    img.onload = () => img.classList.add('loaded');
+    img.onerror = () => img.style.display = 'none';
+  }
+  grid.appendChild(card);
+}
+
+async function loadFilms() {
+  for (const film of films) {
+    try {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${film.tmdbId}?api_key=${TMDB_KEY}&language=es`
+      );
+      const data = await res.json();
+      buildCard(film, data.poster_path || null);
+    } catch {
+      buildCard(film, null);
+    }
+  }
+}
+
+loadFilms();
+</script>
+</body>
+</html>
